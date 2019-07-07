@@ -1,13 +1,14 @@
 let bug; // Declare object
 let foodAmount = 10;
 let foodArray = [];
-let bugAmount = 10;
+let bugAmount = 1;
 let bugArray = [];
 let scribble = new Scribble();
+let fr = 100;
 
 
 function setup() {
-  
+  frameRate(fr);
   noStroke();
   createCanvas(window.windowWidth, window.windowHeight);
   // Create object
@@ -23,8 +24,8 @@ function setup() {
 class Food{
  constructor(i) {
    this.index = i; 
-    this.x = random(355-100,355+100);
-   this.y = random(200-100,200+100); 
+    this.x = random(window.windowWidth/2-100,window.windowWidth/2+100);
+   this.y = random(window.windowHeight/2-100,window.windowHeight/2+100); 
    this.size = random(10,20);
    this.color = [random(100,255),random(100,255),random(100,255),];
  }
@@ -42,7 +43,7 @@ function draw() {
   for (let i = 0; i < bugArray.length; i++){
     bugArray[i].move();
     bugArray[i].display();
-    bugArray[i].smellAndSee();
+    bugArray[i].smellAndSeeAndTouch();
   }
   for (let i = 0; i < foodArray.length; i++){
     foodArray[i].display();
@@ -58,8 +59,8 @@ class Jitter {
   constructor() {
     this.SightDiameter = random(40,90);
     this.SmellDiameter = random(100,200);
-    this.x = random(width);
-    this.y = random(height);
+    this.x = random(0,window.windowWidth);
+    this.y = random(0,window.windowHeight);
     this.angle = random(0,364);
     this.maxAngleChange = 0.3;
     this.distance = 0;
@@ -175,7 +176,52 @@ class Jitter {
     }
     
   }
-         
+      
+  smellAndSeeAndTouch(){
+    for (let i = 0; i < foodArray.length; i++)
+    {
+      let dist = sqrt(sq(this.x - foodArray[i].x ) + sq(this.y - foodArray[i].y));
+      this.foodDistArray[i] = {distance: dist, obj: foodArray[i]};
+    }
+    this.foodDistArray.sort(compareNumbers);
+    if (foodAmount > 0){
+      let foodX = this.foodDistArray[0].obj.x;
+      let foodY = this.foodDistArray[0].obj.y;
+      let smelled = collidePointCircle(foodX,foodY, this.x, this.y, this.SmellDiameter);
+      if (smelled){
+        let seen = collidePointCircle(foodX,foodY, this.x, this.y, this.SightDiameter);
+        if (seen){
+          let eaten = collidePointCircle(foodX, foodY, this.x, this.y, this.diameter);
+          if (eaten){
+            //if eaten
+            this.color = color(0,0,0);              
+            foodAmount--;
+            foodArray.splice(this.foodDistArray[0].obj.index,1);
+            this.foodDistArray.splice(0,1);
+            for (let i = 0; i < foodAmount; i++){
+              foodArray[i].index = i; 
+            }
+          }
+          else {
+            //if seen but not eaten
+            this.color = color(0,70,150)
+          }
+        }
+        else {
+          //if smelled but not seen
+          this.angle = this.getAngle(this.foodDistArray[0].obj);
+          this.color = color(255,255,0);
+        }
+      }
+      else{
+        //if none of those
+        this.color = color(255,255,255);
+      }
+
+    }
+
+
+  }
 
   display() {
     fill(120,120,120, 100);    
