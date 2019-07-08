@@ -1,3 +1,4 @@
+let fr = 60;
 let bug; // Declare object
 let foodAmount = 10;
 let foodArray = [];
@@ -5,7 +6,11 @@ let bugAmount = 10;
 let bugArray = [];
 let drawLine = true;
 let scribble = new Scribble();
-let fr = 100;
+let mutationFactor = .2;
+let foodRespawnRate = 60;
+let foodNumForBaby = 3;
+let lifespan = 10 * fr;
+
 
 
 function setup() {
@@ -17,7 +22,7 @@ function setup() {
       foodArray.push(new Food(i));
     }
   for (let i = 0; i < bugAmount; i++){
-      bugArray.push(new Jitter());
+      bugArray.push(new Jitter(i));
     }
   console.log(foodArray.length);
 }
@@ -41,15 +46,18 @@ class Food{
 
 function draw() {
   background(50, 89, 100);
-  fill(255,255,255);
-  text(mouseX + ", " + mouseY, 100,100,200,200)
   for (let i = 0; i < bugArray.length; i++){
-    bugArray[i].move();
     bugArray[i].display();
     bugArray[i].smellAndSeeAndTouch();
+    bugArray[i].move();
+    
   }
   for (let i = 0; i < foodArray.length; i++){
     foodArray[i].display();
+  }
+  if (frameCount%foodRespawnRate==0){
+    foodAmount++;
+    foodArray.push(new Food(foodArray.length-1));
   }
 }
 
@@ -57,9 +65,20 @@ function compareNumbers(a, b) {
   return a.distance - b.distance;
 }
 
+function mutate(bug){
+  bug.SightDiameter += random(-bug.SightDiameter*mutationFactor, bug.SightDiameter*mutationFactor);
+  bug.SmellDiameter += random(-bug.SmellDiameter*mutationFactor, bug.SmellDiameter*mutationFactor);
+  bug.maxAngleChange += random(-bug.maxAngleChange*mutationFactor, bug.maxAngleChange*mutationFactor);
+  bug.diameter += random(-bug.diameter*mutationFactor, bug.diameter*mutationFactor);
+  bug.speed += random(-bug.speed*mutationFactor, bug.speed*mutationFactor);
+  return bug;
+}
+
 // Jitter class
 class Jitter {
-  constructor() {
+  constructor(i) {
+    this.index = i;
+    this.lifespan = lifespan;
     this.SightDiameter = random(40,90);
     this.SmellDiameter = random(100,200);
     this.x = random(0,window.windowWidth);
@@ -68,15 +87,60 @@ class Jitter {
     this.maxAngleChange = 0.3;
     this.distance = 0;
     this.diameter = random(20,40);
-    this.speed = 1;
+    this.speed = random(1,3);
     this.i = 0;
     this.iEnd = 4;
     this.color = color(255,255,255);
     this.closestFood = new Array(1);
     this.distanceFromClosestFood = 0;
     this.foodDistArray= new Array(foodAmount);
+    this.foodStorage = 0;
+    this.strokeColor = color(0,0,0);
+    this.naturalColor = color(255,255,255);
+    this.hatDiameter = this.diameter*2/3;
+    this.hatColor = color(0,0,0);
+    this.alive = true;
   }
-  
+
+  reproduce(){
+    if (this.foodStorage == foodNumForBaby){
+      this.foodStorage = 0;
+      bugAmount++;
+      bugArray.push(this.clone());
+      console.log(bugArray.length);
+    }
+  }
+
+  decay(){
+    this.lifespan-= sqrt(this.speed);
+    if (this.lifespan <=0 && this.lifespan > -60){
+      this.speed = 0;
+      this.lifespan -= 1;
+      this.SightDiameter/=1.1;
+      this.SmellDiameter/=1.1;
+      this.hatDiameter/=1.1;
+      this.diameter/=1.1;
+      this.alive = false;
+    }
+    if (this.lifespan<=-60){
+      bugAmount--;
+      bugArray.splice(this.index,1);
+      for (let i = 0; i < bugAmount; i++){
+        bugArray[i].index = i;
+      }
+    }
+  }
+
+  getBodyColorByTraits(){
+    let speed = this.speed * (255/5)
+    let foodStorage = this.foodStorage * (255/6);
+    return color(255, 255-speed,255-speed);
+  }
+  getHatColorByTraits(){
+    let speed = this.speed * (255/10)
+    let foodStorage = this.foodStorage * (255/5);
+    return color(255-foodStorage, 255,255-foodStorage);
+  }
   getAngle(food) {
     let dx = (food.x - this.x);
     // Minus to correct for coord re-mapping
@@ -97,9 +161,21 @@ class Jitter {
   convertPolarToYCoordinate() {
     return sin(this.angle) * this.distance;
   }
-  
+  clone() {
+    let newBug = new Jitter();
+    newBug.SightDiameter = this.SightDiameter;
+    newBug.SmellDiameter = this.SmellDiameter;
+    newBug.x = this.x;
+    newBug.y = this.y;
+    newBug.maxAngleChange = this.maxAngleChange;
+    newBug.diameter = this.diameter;
+    newBug.speed = this.speed
+    newBug.hatDiameter = newBug.diameter*2/3;
+    return mutate(newBug);
+  }
   move() {
-    
+    this.decay();
+    this.reproduce();
     this.distance+=this.speed;
     this.x += this.convertPolarToXCoordinate();
     this.y += this.convertPolarToYCoordinate();
@@ -129,60 +205,7 @@ class Jitter {
     }
     
   }
-  smellAndSee() {
-    for (let i = 0; i < foodArray.length; i++)
-    {
-      let dist = sqrt(sq(this.x - foodArray[i].x ) + sq(this.y - foodArray[i].y));
-      this.foodDistArray[i] = {distance: dist, obj: foodArray[i]};
-    }
-    this.foodDistArray.sort(compareNumbers);
-    if (this.foodDistArray.length > 0){
-    //if inside smell
-    if (this.foodDistArray[0].distance < (this.SmellDiameter/2)+5)
-    {
-      //if touching edge of smell
-      if (this.foodDistArray[0].distance > (this.SmellDiameter/2)-5)
-         {this.color = color(0,255,0); 
-          this.angle = this.getAngle(this.foodDistArray[0].obj);
-         }
-      else
-      { //if inside sight
-        if (this.foodDistArray[0].distance < (this.SightDiameter/2)+5){
-          if (this.foodDistArray[0].distance > (this.SightDiameter/2)-5){
-            //this.angle = this.getAngle();
-            this.color = color(255,0,255); //if touching edge of sight
-            this.angle = this.getAngle(this.foodDistArray[0].obj);
-          }
-          else{
-            if (this.foodDistArray[0].distance < (this.diameter)/2){
-              this.color = color(0,0,0); // if touching/inside bug
-              foodAmount--;
-              foodArray.splice(this.foodDistArray[0].obj.index,1);
-              this.foodDistArray.splice(0,1);
-              for (let i = 0; i < foodAmount; i++){
-                 foodArray[i].index = i; 
-              }
-            }
-            else{
-            this.color = color(0,70,150); //if inside sight
-            }
-          }
-        }
-        else {
-          this.color = color(255,255,0); //if inside smell
-          }
-        }
-      }
-    else{
-       this.color = color(255,255,255); 
-    }
-    }
-    else {
-      this.color = color(255,255,255)
-    }
-    
-  }
-      
+   
   smellAndSeeAndTouch(){
     for (let i = 0; i < foodArray.length; i++)
     {
@@ -200,7 +223,8 @@ class Jitter {
           let eaten = collidePointPoint(foodX, foodY, this.x, this.y, this.diameter/2);
           if (eaten){
             //if eaten
-            this.color = color(0,0,0);              
+            this.color = color(0,0,0);   
+            this.foodStorage++;           
             foodAmount--;
             foodArray.splice(this.foodDistArray[0].obj.index,1);
             this.foodDistArray.splice(0,1);
@@ -216,7 +240,7 @@ class Jitter {
         }
         else {
           //if smelled but not seen
-          let smelledEdge = collidePointCircle(foodX,foodY, this.x, this.y, this.SmellDiameter - 5);
+          let smelledEdge = collidePointCircle(foodX,foodY, this.x, this.y, this.SmellDiameter - (this.speed*2))
           if (!smelledEdge){
               this.angle = this.getAngle(this.foodDistArray[0].obj);
           }
@@ -225,13 +249,13 @@ class Jitter {
       }
       else{
         //if none of those
-        this.color = color(255,255,255);
-      }
+        this.naturalColor = this.getBodyColorByTraits();
+        this.color = this.naturalColor;      }
     }
     else {
       //if there is no more food
-      this.color = color(255,255,255);
-    }
+      this.naturalColor = this.getBodyColorByTraits();
+      this.color = this.naturalColor;    }
 
 
   }
@@ -239,20 +263,26 @@ class Jitter {
   display() {
     fill(120,120,120, 100);    
     ellipse(this.x,this.y, this.SmellDiameter, this.SmellDiameter);
+    if (this.alive){
+      fill(120,120,120,70);
+      arc(this.x,this.y,this.SmellDiameter,this.SmellDiameter,0,(this.lifespan/lifespan)*TWO_PI, PIE);
+    }
     fill(160,160,160, 100);
     ellipse(this.x,this.y, this.SightDiameter, this.SightDiameter);
-    if (drawLine){
+    if (drawLine&&this.alive){
       this.linex = this.x + cos(this.angle) * (this.diameter+20);
       this.liney = this.y + sin(this.angle) * (this.diameter+20);
       strokeWeight(1);
       stroke(0,0,0);
-      line(this.x,this.y,this.linex,this.liney)
+      line(this.x,this.y,this.linex,this.liney);
       noStroke();
     }
-    text(this.angle,100,130);
     fill(this.color);
     ellipse(this.x, this.y, this.diameter, this.diameter);
-
+    this.hatColor = this.getHatColorByTraits();
+    fill(this.hatColor);
+    ellipse(this.x,this.y,this.hatDiameter, this.hatDiameter);
+    
     
   }
 }
