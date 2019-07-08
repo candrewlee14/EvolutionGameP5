@@ -34,14 +34,16 @@ class Food{
    this.y = random(window.windowHeight/2-window.windowHeight/3,window.windowHeight/2+window.windowHeight/3); 
    this.size = random(10,20);
    this.color = [random(100,255),random(100,255),random(100,255),];
+   this.timer = 0;
  }
   display() {
     fill(this.color[0],this.color[1],this.color[2]);
-    
-    ellipse(this.x, this.y, this.size, this.size);
+    this.timer++;
+    if (this.timer<this.size)
+      ellipse(this.x,this.y,this.timer,this.timer);
+    else
+      ellipse(this.x, this.y, this.size, this.size);
   }
-  
-  
 }
 
 function draw() {
@@ -112,6 +114,7 @@ class Jitter {
   }
 
   decay(){
+    this.lifespan+=this.foodStorage/3;
     this.lifespan-= sqrt(this.speed);
     if (this.lifespan <=0 && this.lifespan > -60){
       this.speed = 0;
