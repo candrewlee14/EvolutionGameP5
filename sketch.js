@@ -1,7 +1,7 @@
 let bug; // Declare object
 let foodAmount = 10;
 let foodArray = [];
-let bugAmount = 1;
+let bugAmount = 10;
 let bugArray = [];
 let drawLine = true;
 let scribble = new Scribble();
@@ -25,8 +25,8 @@ function setup() {
 class Food{
  constructor(i) {
    this.index = i; 
-    this.x = random(window.windowWidth/2-100,window.windowWidth/2+100);
-   this.y = random(window.windowHeight/2-100,window.windowHeight/2+100); 
+    this.x = random(window.windowWidth/2-window.windowWidth/3,window.windowWidth/2+window.windowWidth/3);
+   this.y = random(window.windowHeight/2-window.windowHeight/3,window.windowHeight/2+window.windowHeight/3); 
    this.size = random(10,20);
    this.color = [random(100,255),random(100,255),random(100,255),];
  }
