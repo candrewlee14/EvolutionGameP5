@@ -3,6 +3,7 @@ let foodAmount = 10;
 let foodArray = [];
 let bugAmount = 1;
 let bugArray = [];
+let drawLine = true;
 let scribble = new Scribble();
 let fr = 100;
 
@@ -40,6 +41,8 @@ class Food{
 
 function draw() {
   background(50, 89, 100);
+  fill(255,255,255);
+  text(mouseX + ", " + mouseY, 100,100,200,200)
   for (let i = 0; i < bugArray.length; i++){
     bugArray[i].move();
     bugArray[i].display();
@@ -61,7 +64,7 @@ class Jitter {
     this.SmellDiameter = random(100,200);
     this.x = random(0,window.windowWidth);
     this.y = random(0,window.windowHeight);
-    this.angle = random(0,364);
+    this.angle = random(0, 2 * PI);
     this.maxAngleChange = 0.3;
     this.distance = 0;
     this.diameter = random(20,40);
@@ -85,7 +88,7 @@ class Jitter {
     else
         inRads = 2 * PI - inRads;
 
-    return degrees(inRads);
+    return inRads;
 }
   
   convertPolarToXCoordinate() {
@@ -109,20 +112,20 @@ class Jitter {
     }
 
     if (this.x < 0){
-      this.angle = 270;
+      this.angle = 0;
       this.x = 0;
     }
-    if (this.x > 710){
-      this.angle = 90;
-      this.x = 710;
+    if (this.x > window.windowWidth){
+      this.angle = PI;
+      this.x = window.windowWidth;
     }
     if (this.y < 0){
-      this.angle = 0;
+      this.angle = 1/2 * PI;
       this.y = 0;
     }
-    if (this.y > 400){
-      this.angle = 180;
-      this.y = 400;
+    if (this.y > window.windowHeight){
+      this.angle = 3/2 * PI;
+      this.y = window.windowHeight;
     }
     
   }
@@ -174,6 +177,9 @@ class Jitter {
        this.color = color(255,255,255); 
     }
     }
+    else {
+      this.color = color(255,255,255)
+    }
     
   }
       
@@ -191,7 +197,7 @@ class Jitter {
       if (smelled){
         let seen = collidePointCircle(foodX,foodY, this.x, this.y, this.SightDiameter);
         if (seen){
-          let eaten = collidePointCircle(foodX, foodY, this.x, this.y, this.diameter);
+          let eaten = collidePointPoint(foodX, foodY, this.x, this.y, this.diameter/2);
           if (eaten){
             //if eaten
             this.color = color(0,0,0);              
@@ -204,12 +210,16 @@ class Jitter {
           }
           else {
             //if seen but not eaten
+            this.angle = this.getAngle(this.foodDistArray[0].obj);
             this.color = color(0,70,150)
           }
         }
         else {
           //if smelled but not seen
-          this.angle = this.getAngle(this.foodDistArray[0].obj);
+          let smelledEdge = collidePointCircle(foodX,foodY, this.x, this.y, this.SmellDiameter - 5);
+          if (!smelledEdge){
+              this.angle = this.getAngle(this.foodDistArray[0].obj);
+          }
           this.color = color(255,255,0);
         }
       }
@@ -217,7 +227,10 @@ class Jitter {
         //if none of those
         this.color = color(255,255,255);
       }
-
+    }
+    else {
+      //if there is no more food
+      this.color = color(255,255,255);
     }
 
 
@@ -228,7 +241,15 @@ class Jitter {
     ellipse(this.x,this.y, this.SmellDiameter, this.SmellDiameter);
     fill(160,160,160, 100);
     ellipse(this.x,this.y, this.SightDiameter, this.SightDiameter);
-    
+    if (drawLine){
+      this.linex = this.x + cos(this.angle) * (this.diameter+20);
+      this.liney = this.y + sin(this.angle) * (this.diameter+20);
+      strokeWeight(1);
+      stroke(0,0,0);
+      line(this.x,this.y,this.linex,this.liney)
+      noStroke();
+    }
+    text(this.angle,100,130);
     fill(this.color);
     ellipse(this.x, this.y, this.diameter, this.diameter);
 
