@@ -22,7 +22,7 @@ class Jitter {
         this.maxAngleChange = 0.3;
         this.distance = 0;
         this.diameter = random(sizeUnit*.2, sizeUnit*.4);
-        this.speed = random(1, 3);
+        this.speed = random(sizeUnit*.01, sizeUnit*.03);
         this.timer = 0;
         this.turnEnd = 4;
         this.color = color(255, 255, 255);
