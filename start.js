@@ -6,6 +6,6 @@ function setup(){
 
     var mgr = new SceneManager();
     mgr.wire();
-    mgr.showScene(Sim);
+    mgr.showScene(Intro);
     
 }
