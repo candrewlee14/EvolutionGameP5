@@ -2,6 +2,9 @@
 class Jitter {
     constructor(i, scene) {
         this.scene = scene;
+        let divisionFactor = 2500;
+        let screenArea = this.scene.simWidth * this.scene.simHeight;
+        let sizeUnit = screenArea/divisionFactor;
         this.parentId = 0;
         this.id = this.scene.totalBugs + 1;
         this.scene.totalBugs++;
@@ -10,15 +13,15 @@ class Jitter {
         this.giveFoodToKidOnBirthProb = this.scene.defaultGiveFoodToKidOnBirthProb;
         this.index = i;
         this.lifespan = this.scene.lifespan;
-        this.SightDiameter = random(40, 90);
-        this.SmellDiameter = random(100, 200);
+        this.SightDiameter = random(sizeUnit*.4, sizeUnit*.9);
+        this.SmellDiameter = random(sizeUnit, sizeUnit*2);
         this.foodParticlesEaten = 0;
         this.x = random(0, this.scene.simWidth);
         this.y = random(0, this.scene.simHeight);
         this.angle = random(0, 2 * PI);
         this.maxAngleChange = 0.3;
         this.distance = 0;
-        this.diameter = random(20, 40);
+        this.diameter = random(sizeUnit*.2, sizeUnit*.4);
         this.speed = random(1, 3);
         this.timer = 0;
         this.turnEnd = 4;
