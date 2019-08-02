@@ -2,7 +2,7 @@
 class Jitter {
     constructor(i, scene) {
         this.scene = scene;
-        let divisionFactor = 2500;
+        let divisionFactor = 5000;
         let screenArea = this.scene.simWidth * this.scene.simHeight;
         let sizeUnit = screenArea/divisionFactor;
         this.parentId = 0;
