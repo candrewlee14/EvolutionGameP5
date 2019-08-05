@@ -191,7 +191,7 @@ class Jitter {
             if (smelled) {
                 let seen = collidePointCircle(foodX, foodY, this.x, this.y, this.SightDiameter);
                 if (seen) {
-                    let eaten = collidePointPoint(foodX, foodY, this.x, this.y, this.diameter / 2);
+                    let eaten = collideCircleCircle(foodX, foodY, this.foodDistArray[0].obj.size, this.x, this.y, this.diameter * .75);
                     if (eaten) {
                         //if eaten
                         this.color = color(0, 0, 0);
@@ -221,7 +221,7 @@ class Jitter {
                     //if smelled but not seen
                     let smelledEdge = collidePointCircle(foodX, foodY, this.x, this.y, this.SmellDiameter - (this.speed * 2))
                     if (!smelledEdge || frameCount % 40 == 0) {
-                        this.angle = this.getAngle(this.foodDistArray[0].obj);
+                        this.angle = this.getAngle(this.foodDistArray[0].obj) + random(-HALF_PI,HALF_PI);
                     }
                     this.color = color(255, 255, 0);
                 }

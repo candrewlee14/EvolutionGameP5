@@ -14,10 +14,11 @@ function Graph() {
 
     var rowArray = bugCSV.getRows();
     for (var i = 0; i < rowArray.length; i++) {
-      points[i] = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("speed"));
-      points2[i] = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("smellDiameter"));
-      points3[i] = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("sightDiameter"));
-      points4[i] = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("diameter"));
+      //label is their parent
+      points[i] = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("speed"), rowArray[i].getNum("parentId"));
+      points2[i] = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("smellDiameter"), rowArray[i].getNum("parentId"));
+      points3[i] = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("sightDiameter"), rowArray[i].getNum("parentId"));
+      points4[i] = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("diameter"), rowArray[i].getNum("parentId"));
 
 
     }
@@ -67,16 +68,24 @@ function Graph() {
     plot.drawTitle();
     plot.drawGridLines(GPlot.VERTICAL);
     //plot.drawFilledContours(GPlot.HORIZONTAL, 0);
+    plot.getMainLayer().drawParentLines();
     plot.drawPoints();
-
+   
+    plot.endDraw();
 
     //plot.drawLines();
-    plot.endDraw();
+    
     plot2.beginDraw();
     plot2.drawRightAxis();
+    plot2.getMainLayer().drawParentLines();
+    plot2.getLayer("Sight Diameter").drawParentLines();
+    plot2.getLayer("Diameter").drawParentLines();
+
     plot2.getMainLayer().drawPoints();
+    
     plot2.getLayer("Sight Diameter").drawPoints();
     plot2.getLayer("Diameter").drawPoints();
+    
     plot2.endDraw();
 
     fill(0, 0, 0);
