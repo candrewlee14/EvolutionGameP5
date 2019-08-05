@@ -2,9 +2,10 @@
 class Jitter {
     constructor(i, scene) {
         this.scene = scene;
-        let divisionFactor = 5000;
+        this.birthFrame = frameCount;
+        let divisionFactor = 10000;
         let screenArea = this.scene.simWidth * this.scene.simHeight;
-        let sizeUnit = screenArea/divisionFactor;
+        let sizeUnit = screenArea / divisionFactor;
         this.parentId = 0;
         this.id = this.scene.totalBugs + 1;
         this.scene.totalBugs++;
@@ -13,16 +14,16 @@ class Jitter {
         this.giveFoodToKidOnBirthProb = this.scene.defaultGiveFoodToKidOnBirthProb;
         this.index = i;
         this.lifespan = this.scene.lifespan;
-        this.SightDiameter = random(sizeUnit*.4, sizeUnit*.9);
-        this.SmellDiameter = random(sizeUnit, sizeUnit*2);
+        this.SightDiameter = random(sizeUnit * .4, sizeUnit * .9);
+        this.SmellDiameter = random(sizeUnit, sizeUnit * 2);
         this.foodParticlesEaten = 0;
         this.x = random(0, this.scene.simWidth);
         this.y = random(0, this.scene.simHeight);
         this.angle = random(0, 2 * PI);
         this.maxAngleChange = 0.3;
         this.distance = 0;
-        this.diameter = random(sizeUnit*.2, sizeUnit*.4);
-        this.speed = random(sizeUnit*.01, sizeUnit*.03);
+        this.diameter = random(sizeUnit * .2, sizeUnit * .4);
+        this.speed = random(sizeUnit * .01, sizeUnit * .03);
         this.timer = 0;
         this.turnEnd = 4;
         this.color = color(255, 255, 255);
@@ -120,7 +121,7 @@ class Jitter {
         return sin(this.angle) * this.distance;
     }
     clone() {
-        let newBug = new Jitter(0,this.scene);
+        let newBug = new Jitter(0, this.scene);
         newBug.parentId = this.id;
         newBug.giveFoodToKidOnBirthProb = this.giveFoodToKidOnBirthProb;
         newBug.mutationFactor = this.mutationFactor;
