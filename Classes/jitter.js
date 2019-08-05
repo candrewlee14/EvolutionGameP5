@@ -213,6 +213,7 @@ class Jitter {
                         if (sqrt(sq(this.x - this.foodDistArray[0].obj.x) + sq(this.y - this.foodDistArray[0].obj.y)) < this.speed) {
                             this.x = this.foodDistArray[0].obj.x;
                             this.y = this.foodDistArray[0].obj.y;
+                            this.smellAndSeeAndTouch();   
                         }
 
                         this.color = color(0, 70, 150)
