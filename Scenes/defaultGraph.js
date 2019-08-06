@@ -18,6 +18,66 @@ function DefaultGraph() {
   this.graphDiameter = true;
   this.drawParentLines = true;
 
+  this.setup = function () {
+    
+    checkBoxArray = new Array();
+
+    checkBoxTest = new Checkbox("Smell Diameter", 100, 70, 10, me.graphSmell);
+    checkBoxTest.textColor = color(0, 150, 0);
+    checkBoxTest.clickFunction = () => {
+      me.graphSmell = checkBoxTest.bool;
+      me.enter();
+    };
+    checkBoxTest.checkedColor = color(0, 150, 0);
+    checkBoxArray.push(checkBoxTest);
+
+    checkBoxTest2 = new Checkbox("Sight Diameter", 200, 70, 10, me.graphSight);
+    checkBoxTest2.textColor = color(200, 100, 200);
+    checkBoxTest2.clickFunction = () => {
+      me.graphSight = checkBoxTest2.bool;
+      me.enter();
+    };
+    checkBoxTest2.checkedColor = color(200, 100, 200);
+    checkBoxArray.push(checkBoxTest2);
+
+    checkBoxTest3 = new Checkbox("Diameter", 300, 70, 10, me.graphDiameter);
+    checkBoxTest3.textColor = color(0, 100, 200);
+    checkBoxTest3.clickFunction = () => {
+      me.graphDiameter = checkBoxTest3.bool;
+      me.enter();
+    };
+    checkBoxTest3.checkedColor = color(0, 100, 200);
+    checkBoxArray.push(checkBoxTest3);
+
+    checkBoxTest4 = new Checkbox("Diameter", 300, 70, 10, me.graphDiameter);
+    checkBoxTest4.textColor = color(0, 100, 200);
+    checkBoxTest4.clickFunction = () => {
+      me.graphDiameter = checkBoxTest4.bool;
+      me.enter();
+    };
+    checkBoxTest4.checkedColor = color(0, 100, 200);
+    checkBoxArray.push(checkBoxTest4);
+
+    checkBoxTest5 = new Checkbox("Speed", 400, 70, 10, me.graphSpeed);
+    checkBoxTest5.textColor = color(255, 0, 0);
+    checkBoxTest5.clickFunction = () => {
+      me.graphSpeed = checkBoxTest5.bool;
+      me.enter();
+    };
+    checkBoxTest5.checkedColor = color(255, 0, 0);
+    checkBoxArray.push(checkBoxTest5);
+
+    checkBoxTest6 = new Checkbox("Parent Lines", 500, 70, 10, me.drawParentLines);
+    checkBoxTest6.textColor = color(150, 150, 150);
+    checkBoxTest6.clickFunction = () => {
+      me.drawParentLines = checkBoxTest6.bool;
+      me.enter();
+    };
+    checkBoxTest6.checkedColor = color(150, 150, 150);
+    checkBoxArray.push(checkBoxTest6);
+
+  }
+
   this.enter = function () {
     background(100, 100, 100);
     // Create the canvas
@@ -52,7 +112,7 @@ function DefaultGraph() {
     plot2.setDim(plot.getDim());
     // Set the plot title and the axis labels
     plot.setPoints(points);
-    
+
 
     plot.getXAxis().setAxisLabelText("Birth Frame");
     plot.getYAxis().setAxisLabelText("Speed (pixels per frame)");
@@ -81,8 +141,8 @@ function DefaultGraph() {
     plot.drawTitle();
     plot.drawGridLines(GPlot.VERTICAL);
     if (this.graphSpeed) {
-      
-      
+
+
       //plot.drawFilledContours(GPlot.HORIZONTAL, 0);
       if (this.drawParentLines)
         plot.getMainLayer().drawParentLines();
@@ -115,57 +175,9 @@ function DefaultGraph() {
 
     plot2.endDraw();
 
-    checkBoxArray = new Array();
-
-    checkBoxTest = new Checkbox("Smell Diameter",100,70, 10, me.graphSmell);
-    checkBoxTest.textColor = color(0,150,0);
-    checkBoxTest.clickFunction = () => {
-      me.graphSmell = checkBoxTest.bool;
-      me.enter();};
-    checkBoxTest.checkedColor = color(0, 150, 0);
-    checkBoxArray.push(checkBoxTest);
-
-    checkBoxTest2 = new Checkbox("Sight Diameter",200,70,10, me.graphSight);
-    checkBoxTest2.textColor = color(200, 100, 200);
-    checkBoxTest2.clickFunction = () => {
-      me.graphSight = checkBoxTest2.bool;
-      me.enter();};
-    checkBoxTest2.checkedColor = color(200, 100, 200);
-    checkBoxArray.push(checkBoxTest2);
-
-    checkBoxTest3 = new Checkbox("Diameter",300,70,10, me.graphDiameter);
-    checkBoxTest3.textColor = color(0, 100, 200);
-    checkBoxTest3.clickFunction = () => {
-      me.graphDiameter = checkBoxTest3.bool;
-      me.enter();};
-    checkBoxTest3.checkedColor = color(0, 100, 200);
-    checkBoxArray.push(checkBoxTest3);
-
-    checkBoxTest4 = new Checkbox("Diameter",300,70,10, me.graphDiameter);
-    checkBoxTest4.textColor = color(0, 100, 200);
-    checkBoxTest4.clickFunction = () => {
-      me.graphDiameter = checkBoxTest4.bool;
-      me.enter();};
-    checkBoxTest4.checkedColor = color(0, 100, 200);
-    checkBoxArray.push(checkBoxTest4);
-
-    checkBoxTest5 = new Checkbox("Speed",400,70,10, me.graphSpeed);
-    checkBoxTest5.textColor = color(255, 0, 0);
-    checkBoxTest5.clickFunction = () => {
-      me.graphSpeed = checkBoxTest5.bool;
-      me.enter();};
-    checkBoxTest5.checkedColor = color(255, 0, 0);
-    checkBoxArray.push(checkBoxTest5);
-
-    checkBoxTest6 = new Checkbox("Parent Lines",500,70,10, me.drawParentLines);
-    checkBoxTest6.textColor = color(150, 150, 150);
-    checkBoxTest6.clickFunction = () => {
-      me.drawParentLines = checkBoxTest6.bool;
-      me.enter();};
-    checkBoxTest6.checkedColor = color(150, 150, 150);
-    checkBoxArray.push(checkBoxTest6);
-
-
+    for (let i = 0; i < checkBoxArray.length; i++) {
+      checkBoxArray[i].display();
+    }
 
 
     resumeButton = new Button("RESUME", 100, 10, 80, 20, color(0, 0, 0), color(40, 40, 40), color(240, 240, 240), () => me.sceneManager.showScene(Sim));
@@ -181,8 +193,8 @@ function DefaultGraph() {
     resumeButton.handleAndDraw();
     exportButton.handleAndDraw();
     customGraphButton.handleAndDraw();
-    for (let i = 0; i < checkBoxArray.length; i++){
-      checkBoxArray[i].handleAndDraw();
+    for (let i = 0; i < checkBoxArray.length; i++) {
+      checkBoxArray[i].handle();
     }
 
   }

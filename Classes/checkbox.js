@@ -3,7 +3,7 @@ function Checkbox(label,x,y,size, bool){
     this.x = x;
     this.y = y;
     this.size = size;
-    this.checkedColor = color(0,0,255);
+    this.checkedColor = color(0,0,0);
     this.uncheckedColor = color(255,255,255);
     this.textColor = color(0,0,0);
     this.clickTimer = 0;
@@ -19,18 +19,20 @@ function Checkbox(label,x,y,size, bool){
     this.unCheck = function(){
         this.bool = true;
     }
-    this.handleAndDraw = function(){
+    this.handle = function(){
         
-        stroke(0,0,0);
-        strokeWeight(.2);
         this.clickTimer++;
         let overButton = collidePointRect(mouseX, mouseY, this.x, this.y, this.size, this.size);
         if (overButton && mouseIsPressed && this.clickTimer > 25){ 
             this.toggleCheck();
-            console.log("Yes");
+            //console.log("Yes");
             this.clickTimer = 0;
             this.clickFunction();
         }    
+    }
+    this.display = function(){
+        stroke(0,0,0);
+        strokeWeight(.2);
         fill(this.uncheckedColor);
         rect(this.x,this.y,this.size,this.size,this.size/20,this.size/20,this.size/20,this.size/20);
         if (this.bool){
@@ -46,7 +48,5 @@ function Checkbox(label,x,y,size, bool){
         textFont('Montserrat');
         fill(this.textColor);
         text(this.label, this.x + this.size + 10, this.y); 
-        
-        
     }
 }
