@@ -10,6 +10,9 @@ function CustomGraph() {
     let columnNameX = oAnimX.oScene.dataColumnChosen;
     let columnNameY = oAnimY.oScene.dataColumnChosen;
 
+    let oAnimGraph = this.sceneManager.findScene(DefaultGraph);
+    let startPauseFrame = oAnimGraph.oScene.startPauseFrame;
+
     let oAnim1 = this.sceneManager.findScene(Sim);
     let bugCSV = oAnim1.oScene.bugTable;
 
@@ -100,7 +103,7 @@ function CustomGraph() {
       fill(0,0,0);
       text(livingCount + " living ungraphed",200,80);
     }
-    resumeButton = new Button("RESUME", 100, 10, 80, 20, color(0, 0, 0), color(20, 20, 20), color(240, 240, 240), () => me.sceneManager.showScene(Sim));
+    resumeButton = new Button("RESUME", 100, 10, 80, 20, color(0, 0, 0), color(20, 20, 20), color(240, 240, 240), () => {me.sceneManager.showScene(Sim); frameCount -= (frameCount - startPauseFrame)});
     //noLoop();
   };
   this.draw = function () {
