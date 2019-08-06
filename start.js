@@ -2,6 +2,7 @@ var mgr;
 let container = this;
 function preload(){}
 function setup(){
+    textFont('Montserrat');
     simWidth = window.windowWidth;
     simHeight = window.windowHeight;
     createCanvas(simWidth, simHeight);
@@ -10,8 +11,4 @@ function setup(){
     mgr.wire();
     mgr.showScene(Intro);
     
-}
-function mousePressed()
-{
-    mgr.handleEvent("mousePressed");
 }

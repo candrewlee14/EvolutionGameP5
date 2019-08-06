@@ -70,7 +70,7 @@ function Sim() {
     this.bugTable.addColumn('childrenCount');
 
 
-
+    let defaultGraphButton;
 
     this.setup = function () {
         noStroke();
@@ -86,6 +86,7 @@ function Sim() {
             this.bugArray.push(new Jitter(i, self));
         }
         console.log(this.foodArray.length);
+        defaultGraphButton = new Button("GRAPH DATA", 10, 10, 80, 20, color(240, 240, 240), color(200, 200, 200), color(0, 0, 0, ), () => self.sceneManager.showScene(DefaultGraph));
     }
 
     this.draw = function () {
@@ -97,7 +98,7 @@ function Sim() {
 
         }
         if (this.bugAmount == 0) {
-            if (this.playing){
+            if (this.playing) {
                 alert("All bugs are dead. View and/or export data now.")
                 this.playing = false;
             }
@@ -114,15 +115,8 @@ function Sim() {
                 this.foodArray[i].index = i;
             }
         }
-        textAlign(CENTER, CENTER);
+
         textSize(10);
-        fill(240, 240, 240);
-        rect(10, 10, 60, 20);
-        fill(0, 0, 0);
-        text("GRAPH DATA", 40, 17);
-        let touchButton = collidePointRect(mouseX, mouseY, 10, 10, 60, 20);
-        if (mouseIsPressed && touchButton) {
-            self.sceneManager.showScene(Graph);
-        }
+        defaultGraphButton.handleAndDraw();
     }
 }

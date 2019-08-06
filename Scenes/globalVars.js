@@ -1,0 +1,12 @@
+    this.globalsTable.addColumn('startingFoodAmount');
+    this.globalsTable.addColumn('startingBugAmount');
+    this.globalsTable.addColumn('framerate');
+    this.globalsTable.addColumn('lifespan');
+    this.globalsTable.addColumn('foodRespawnRate');
+    this.globalsTable.addColumn('foodNumForBaby');
+    this.globalsTable.addColumn('defaultGiveFoodToKidOnBirthProb');
+    this.globalsTable.addColumn('mutationFactor');
+    this.globalsTable.addColumn('mutateMutationFactor');
+    this.globalsTable.addColumn('blindTimer');
+    this.globalsTable.addColumn('simWidth');
+    this.globalsTable.addColumn('simHeight');
