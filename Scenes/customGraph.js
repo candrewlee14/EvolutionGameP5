@@ -14,7 +14,7 @@ function CustomGraph() {
     let bugCSV = oAnim1.oScene.bugTable;
 
     var points = [];
-
+    let livingCount = 0;
     var rowArray = bugCSV.getRows();
     for (var i = 0; i < rowArray.length; i++) {
       //label is their parent
@@ -26,6 +26,7 @@ function CustomGraph() {
             } catch (e) {
               console.log("ignored a living bug");
               console.log(e);
+              livingCount++;
             }
           } else if (columnNameY == "lifespan") {
             try {
@@ -33,6 +34,7 @@ function CustomGraph() {
             } catch (e) {
               console.log("ignored a living bug");
               console.log(e);
+              livingCount++;
             }
           } else {
             points[i] = new GPoint(rowArray[i].getNum(columnNameX), rowArray[i].getNum(columnNameY), rowArray[i].getNum("parentId"));
@@ -40,14 +42,16 @@ function CustomGraph() {
         } catch (e) {
           console.log("ignored a living bug");
           console.log(e);
+          livingCount++;
         }
       }
-      if (columnNameX == "lifespan") {
+      else if (columnNameX == "lifespan") {
         try {
           points[i] = new GPoint(rowArray[i].getNum("deathFrame") - rowArray[i].getNum("birthFrame"), rowArray[i].getNum(columnNameY), rowArray[i].getNum("parentId"));
         } catch (e) {
           console.log("ignored a living bug");
           console.log(e);
+          livingCount++;
         }
       } else if (columnNameY == "lifespan") {
         try {
@@ -55,11 +59,13 @@ function CustomGraph() {
         } catch (e) {
           console.log("ignored a living bug");
           console.log(e);
+          livingCount++;
         }
       } else {
         points[i] = new GPoint(rowArray[i].getNum(columnNameX), rowArray[i].getNum(columnNameY), rowArray[i].getNum("parentId"));
       }
     }
+    
 
     // Create a new plot and set its position on the screen
     var plot = new GPlot(me.sceneManager.p);
@@ -90,6 +96,10 @@ function CustomGraph() {
     plot.endDraw();
 
     textSize(10);
+    if (livingCount > 0){
+      fill(0,0,0);
+      text(livingCount + " living ungraphed",200,80);
+    }
     resumeButton = new Button("RESUME", 100, 10, 80, 20, color(0, 0, 0), color(20, 20, 20), color(240, 240, 240), () => me.sceneManager.showScene(Sim));
     //noLoop();
   };

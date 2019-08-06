@@ -33,13 +33,6 @@ function CustomGraphSetupY() {
 
     this.setup = function () {
         
-        let oAnimX = this.sceneManager.findScene(CustomGraphSetupX);
-        let columnNameX = oAnimX.oScene.dataColumnChosen;
-        for (let i = 0; i < this.dataColumns.length; i++){
-            if (columnNameX == this.dataColumns[i][0]){
-                this.dataColumns.splice(i,1);
-            }
-        }
 
         
         ////
@@ -115,6 +108,15 @@ function CustomGraphSetupY() {
 
         fill(230, 230, 255);
         rect(simWidth / 4, simHeight / 4, simWidth / 2, simHeight / 2, 0, 0, 10, 10);
+
+        
+        let oAnimX = this.sceneManager.findScene(CustomGraphSetupX);
+        let columnNameX = oAnimX.oScene.dataColumnChosen;
+        for (let i = 0; i < this.dataColumns.length; i++){
+            if (columnNameX == this.dataColumns[i][0]){
+                this.dataColumns.splice(i,1);
+            }
+        }
 
         this.checkBoxArray1 = new Array();
         for (let i = 0; i < this.dataColumns.length; i++){
