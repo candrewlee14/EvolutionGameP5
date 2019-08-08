@@ -240,16 +240,19 @@ class Jitter {
             this.color = this.naturalColor;
         }
     }
-
-    display() {
+    displaySmell(){
         fill(120, 120, 120, 100);
         ellipse(this.x, this.y, this.SmellDiameter, this.SmellDiameter);
         if (this.alive) {
             fill(120, 120, 120, 70);
             arc(this.x, this.y, this.SmellDiameter, this.SmellDiameter, 0, (this.lifespan / this.scene.lifespan) * TWO_PI, PIE);
         }
+    }
+    displaySight(){
         fill(160, 160, 160, 100);
         ellipse(this.x, this.y, this.SightDiameter, this.SightDiameter);
+    }
+    display() {
         if (this.scene.drawLine && this.alive) {
             this.linex = this.x + cos(this.angle) * (this.diameter + 20);
             this.liney = this.y + sin(this.angle) * (this.diameter + 20);

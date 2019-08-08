@@ -92,6 +92,14 @@ function Sim() {
     this.draw = function () {
         background(50, 89, 100);
         for (let i = 0; i < this.bugAmount; i++) {
+            this.bugArray[i].displaySmell();
+
+        }
+        for (let i = 0; i < this.bugAmount; i++) {
+            this.bugArray[i].displaySight();
+
+        }
+        for (let i = 0; i < this.bugAmount; i++) {
             this.bugArray[i].display();
             this.bugArray[i].smellAndSeeAndTouch();
             this.bugArray[i].move();
