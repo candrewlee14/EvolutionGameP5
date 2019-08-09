@@ -39,9 +39,21 @@ GLayer.prototype.drawParentLines = function(){
   strokeWeight(1);
   stroke(200,200,200);
   for (let i = 0; i < this.plotPoints.length; i++){
-    if (parseInt(this.points[i].label) != 0){
-      line(this.plotPoints[i].x, this.plotPoints[i].y, this.plotPoints[parseInt(this.points[i].label)-1].x, this.plotPoints[parseInt(this.points[i].label)-1].y);
-      if (this.plotPoints[i].x == this.plotPoints[parseInt(this.points[i].label)-1].x)
+    if (parseInt(this.points[i].parentId) != 0){
+      line(this.plotPoints[i].x, this.plotPoints[i].y, this.plotPoints[parseInt(this.points[i].parentId)-1].x, this.plotPoints[parseInt(this.points[i].parentId)-1].y);
+      if (this.plotPoints[i].x == this.plotPoints[parseInt(this.points[i].parentId)-1].x)
+        console.log("major problem");
+    }
+  }
+}
+
+GLayer.prototype.drawKillerLines = function(){
+  strokeWeight(1);
+  stroke(200,50,200);
+  for (let i = 0; i < this.plotPoints.length; i++){
+    if (parseInt(this.points[i].killerId) != -1){
+      line(this.plotPoints[i].x, this.plotPoints[i].y, this.plotPoints[parseInt(this.points[i].killerId)-1].x, this.plotPoints[parseInt(this.points[i].killerId)-1].y);
+      if (this.plotPoints[i].x == this.plotPoints[parseInt(this.points[i].killerId)-1].x)
         console.log("major problem");
     }
   }

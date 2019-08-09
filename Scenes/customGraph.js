@@ -25,7 +25,7 @@ function CustomGraph() {
         try {
           if (columnNameX == "lifespan") {
             try {
-              points[i] = new GPoint(rowArray[i].getNum("deathFrame") - rowArray[i].getNum("birthFrame"), rowArray[i].getNum(columnNameY), rowArray[i].getNum("parentId"));
+              points.push(new GPoint(rowArray[i].getNum("deathFrame") - rowArray[i].getNum("birthFrame"), rowArray[i].getNum(columnNameY), rowArray[i].getNum("parentId")));
             } catch (e) {
               console.log("ignored a living bug");
               console.log(e);
@@ -33,14 +33,14 @@ function CustomGraph() {
             }
           } else if (columnNameY == "lifespan") {
             try {
-              points[i] = new GPoint(rowArray[i].getNum(columnNameX), rowArray[i].getNum("deathFrame") - rowArray[i].getNum("birthFrame"), rowArray[i].getNum("parentId"));
+              points.push(new GPoint(rowArray[i].getNum(columnNameX), rowArray[i].getNum("deathFrame") - rowArray[i].getNum("birthFrame"), rowArray[i].getNum("parentId")));
             } catch (e) {
               console.log("ignored a living bug");
               console.log(e);
               livingCount++;
             }
           } else {
-            points[i] = new GPoint(rowArray[i].getNum(columnNameX), rowArray[i].getNum(columnNameY), rowArray[i].getNum("parentId"));
+            points.push(new GPoint(rowArray[i].getNum(columnNameX), rowArray[i].getNum(columnNameY), rowArray[i].getNum("parentId")));
           }
         } catch (e) {
           console.log("ignored a living bug");
@@ -50,7 +50,7 @@ function CustomGraph() {
       }
       else if (columnNameX == "lifespan") {
         try {
-          points[i] = new GPoint(rowArray[i].getNum("deathFrame") - rowArray[i].getNum("birthFrame"), rowArray[i].getNum(columnNameY), rowArray[i].getNum("parentId"));
+          points.push(new GPoint(rowArray[i].getNum("deathFrame") - rowArray[i].getNum("birthFrame"), rowArray[i].getNum(columnNameY), rowArray[i].getNum("parentId")));
         } catch (e) {
           console.log("ignored a living bug");
           console.log(e);
@@ -58,14 +58,14 @@ function CustomGraph() {
         }
       } else if (columnNameY == "lifespan") {
         try {
-          points[i] = new GPoint(rowArray[i].getNum(columnNameX), rowArray[i].getNum("deathFrame") - rowArray[i].getNum("birthFrame"), rowArray[i].getNum("parentId"));
+          points.push(new GPoint(rowArray[i].getNum(columnNameX), rowArray[i].getNum("deathFrame") - rowArray[i].getNum("birthFrame"), rowArray[i].getNum("parentId")));
         } catch (e) {
           console.log("ignored a living bug");
           console.log(e);
           livingCount++;
         }
       } else {
-        points[i] = new GPoint(rowArray[i].getNum(columnNameX), rowArray[i].getNum(columnNameY), rowArray[i].getNum("parentId"));
+        points.push(new GPoint(rowArray[i].getNum(columnNameX), rowArray[i].getNum(columnNameY), rowArray[i].getNum("parentId")));
       }
     }
     

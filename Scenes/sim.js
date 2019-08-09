@@ -14,6 +14,7 @@ function Sim() {
     this.lifespan = 25 * this.fr;
     this.foodLifespanFactor = 120;
     this.blindTimer = 200;
+    this.cannibalism = true;
     this.defaultGiveFoodToKidOnBirthProb = 1;
     this.mutateMutationFactor = true;
     this.totalBugs = 0;
@@ -67,7 +68,11 @@ function Sim() {
     this.bugTable.addColumn('birthFrame');
     this.bugTable.addColumn('deathFrame');
     this.bugTable.addColumn('foodEaten');
+    this.bugTable.addColumn('foodNutritionEaten');
     this.bugTable.addColumn('childrenCount');
+    this.bugTable.addColumn('bugsEaten');
+    this.bugTable.addColumn('bugNutritionEaten');
+    this.bugTable.addColumn('causeOfDeath');
 
 
     let defaultGraphButton;
@@ -101,8 +106,8 @@ function Sim() {
         }
         for (let i = 0; i < this.bugAmount; i++) {
             this.bugArray[i].display();
-            this.bugArray[i].smellAndSeeAndTouch();
             this.bugArray[i].move();
+            this.bugArray[i].smellAndSeeAndTouch(); 
 
         }
         if (this.bugAmount == 0) {

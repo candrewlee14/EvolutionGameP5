@@ -21,7 +21,7 @@ function DefaultGraph() {
   this.startPauseFrame;
 
   this.setup = function () {
-    
+    GPoint.prototype.parentId = -1;
     checkBoxArray = new Array();
 
     checkBoxTest = new Checkbox("Smell Diameter", 100, 70, 10, me.graphSmell);
@@ -96,11 +96,45 @@ function DefaultGraph() {
     var rowArray = bugCSV.getRows();
     for (var i = 0; i < rowArray.length; i++) {
       //label is their parent
-      points[i] = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("speed"), rowArray[i].getNum("parentId"));
-      points2[i] = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("smellDiameter"), rowArray[i].getNum("parentId"));
-      points3[i] = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("sightDiameter"), rowArray[i].getNum("parentId"));
-      points4[i] = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("diameter"), rowArray[i].getNum("parentId"));
+      var point = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("speed"), rowArray[i].getNum("id"));
+      point.parentId = rowArray[i].getNum("parentId");
+      try {
+        point.killerId = rowArray[i].getNum("causeOfDeath");
+      } catch (e) {
+        console.log('not dead?' + e);
+        point.killerId = -1;
+      }
+      points[i] = point;
 
+      point = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("smellDiameter"), rowArray[i].getNum("id"));
+      point.parentId = rowArray[i].getNum("parentId");
+      try {
+        point.killerId = rowArray[i].getNum("causeOfDeath");
+      } catch (e) {
+        console.log('not dead?' + e);
+        point.killerId = -1;
+      }
+      points2[i] = point;
+
+      point = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("sightDiameter"), rowArray[i].getNum("id"));
+      point.parentId = rowArray[i].getNum("parentId");
+      try {
+        point.killerId = rowArray[i].getNum("causeOfDeath");
+      } catch (e) {
+        console.log('not dead?' + e);
+        point.killerId = -1;
+      }
+      points3[i] = point;
+
+      point = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("diameter"), rowArray[i].getNum("id"));
+      point.parentId = rowArray[i].getNum("parentId");
+      try {
+        point.killerId = rowArray[i].getNum("causeOfDeath");
+      } catch (e) {
+        console.log('not dead?' + e);
+        point.killerId = -1;
+      }
+      points4[i] = point;
 
     }
 
@@ -149,6 +183,7 @@ function DefaultGraph() {
       //plot.drawFilledContours(GPlot.HORIZONTAL, 0);
       if (this.drawParentLines)
         plot.getMainLayer().drawParentLines();
+      plot.getMainLayer().drawKillerLines();
       plot.drawPoints();
     }
     plot.endDraw();
@@ -183,7 +218,10 @@ function DefaultGraph() {
     }
 
 
-    resumeButton = new Button("RESUME", 100, 10, 80, 20, color(0, 0, 0), color(40, 40, 40), color(240, 240, 240), () => {me.sceneManager.showScene(Sim); frameCount -= (frameCount - me.startPauseFrame)});
+    resumeButton = new Button("RESUME", 100, 10, 80, 20, color(0, 0, 0), color(40, 40, 40), color(240, 240, 240), () => {
+      me.sceneManager.showScene(Sim);
+      frameCount -= (frameCount - me.startPauseFrame)
+    });
     customGraphButton = new Button("GRAPH CUSTOM", 300, 10, 100, 20, color(60, 0, 0), color(100, 20, 20), color(240, 240, 240), () => me.sceneManager.showScene(CustomGraphSetupX));
     exportButton = new Button("EXPORT", 200, 10, 80, 20, color(0, 0, 60), color(20, 20, 100), color(240, 240, 240), () => {
       alert("Saving data as csv files. If not saving, allow downloads from this site.");

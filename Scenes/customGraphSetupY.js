@@ -7,7 +7,7 @@ function CustomGraphSetupY() {
     let checkBox3;
     let checkBox4;
     let checkBox5;
-    this.dataColumns = [['id', false],
+    const dataColumns = [['id', false],
     ['sightDiameter', false],
     ['smellDiameter', false],
     ['maxAngleChange', false],
@@ -19,8 +19,14 @@ function CustomGraphSetupY() {
     ['birthFrame', false],
     ['deathFrame', false],
     ['foodEaten', false],
+    ['bugsEaten', false],
+    ['foodNutritionEaten', false],
+    ['bugNutritionEaten', false],
     ['childrenCount', false],
-    ['lifespan',false]];
+    ['lifespan',false],
+    ['causeOfDeath',false]];
+    
+    this.dataColumns = dataColumns;
     this.dataColumnChosen = "";
     this.timer = 0;
 
@@ -109,6 +115,7 @@ function CustomGraphSetupY() {
         fill(230, 230, 255);
         rect(simWidth / 4, simHeight / 4, simWidth / 2, simHeight / 2, 0, 0, 10, 10);
 
+        this.dataColumns = dataColumns;
         
         let oAnimX = this.sceneManager.findScene(CustomGraphSetupX);
         let columnNameX = oAnimX.oScene.dataColumnChosen;
