@@ -11,12 +11,14 @@ function DefaultGraph() {
   let checkBoxTest4;
   let checkBoxTest5;
   let checkBoxTest6;
+  let checkBoxTest7;
 
   this.graphSpeed = true;
   this.graphSmell = true;
   this.graphSight = true;
   this.graphDiameter = true;
   this.drawParentLines = true;
+  this.drawKillerLines = false;
 
   this.startPauseFrame;
 
@@ -77,6 +79,16 @@ function DefaultGraph() {
     };
     checkBoxTest6.checkedColor = color(150, 150, 150);
     checkBoxArray.push(checkBoxTest6);
+
+    checkBoxTest7 = new Checkbox("Killer Lines (circle on prey)", 600, 70, 10, me.drawKillerLines);
+    checkBoxTest7.textColor = color(220, 100, 100);
+    checkBoxTest7.clickFunction = () => {
+      me.drawKillerLines = checkBoxTest7.bool;
+      me.enter();
+    };
+    checkBoxTest7.checkedColor = color(220, 100, 100);
+    checkBoxArray.push(checkBoxTest7);
+
 
   }
 
@@ -183,7 +195,8 @@ function DefaultGraph() {
       //plot.drawFilledContours(GPlot.HORIZONTAL, 0);
       if (this.drawParentLines)
         plot.getMainLayer().drawParentLines();
-      plot.getMainLayer().drawKillerLines();
+      if (this.drawKillerLines)
+        plot.getMainLayer().drawKillerLines();
       plot.drawPoints();
     }
     plot.endDraw();
@@ -198,16 +211,22 @@ function DefaultGraph() {
     if (this.graphSmell) {
       if (this.drawParentLines)
         plot2.getMainLayer().drawParentLines();
+      if (this.drawKillerLines)
+        plot2.getMainLayer().drawKillerLines();
       plot2.getMainLayer().drawPoints();
     }
     if (this.graphSight) {
       if (this.drawParentLines)
         plot2.getLayer("Sight Diameter").drawParentLines();
+      if (this.drawKillerLines)
+        plot2.getLayer("Sight Diameter").drawKillerLines();
       plot2.getLayer("Sight Diameter").drawPoints();
     }
     if (this.graphDiameter) {
       if (this.drawParentLines)
         plot2.getLayer("Diameter").drawParentLines();
+      if (this.drawKillerLines)
+        plot2.getLayer("Diameter").drawKillerLines();
       plot2.getLayer("Diameter").drawPoints();
     }
 
