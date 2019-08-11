@@ -2,7 +2,13 @@
 class Jitter {
     constructor(i, scene) {
         this.scene = scene;
-        this.birthFrame = frameCount;
+        let oAnimX = scene.sceneManager.findScene(DefaultGraph);
+        let totalPausedFrames;
+        if (oAnimX == null)
+            totalPausedFrames = 0;
+        else 
+            totalPausedFrames = oAnimX.oScene.totalPausedFrames;
+        this.birthFrame = frameCount - totalPausedFrames;
         let divisionFactor = 10000;
         let screenArea = this.scene.simWidth * this.scene.simHeight;
         let sizeUnit = screenArea / divisionFactor;

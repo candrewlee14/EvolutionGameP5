@@ -64,7 +64,17 @@ function CustomGraph() {
           console.log(e);
           livingCount++;
         }
-      } else {
+      } else if (columnNameY == "causeOfDeath") {
+        try {
+          if (rowArray[i].getNum("causeOfDeath") != -1)
+            points.push(new GPoint(rowArray[i].getNum(columnNameX), rowArray[i].getNum("causeOfDeath"), rowArray[i].getNum("parentId")));
+        } catch (e) {
+          console.log("ignored a living bug");
+          console.log(e);
+          livingCount++;
+        }
+       } else {
+
         points.push(new GPoint(rowArray[i].getNum(columnNameX), rowArray[i].getNum(columnNameY), rowArray[i].getNum("parentId")));
       }
     }

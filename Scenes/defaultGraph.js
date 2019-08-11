@@ -21,6 +21,7 @@ function DefaultGraph() {
   this.drawKillerLines = false;
 
   this.startPauseFrame;
+  this.totalPausedFrames = 0;
 
   this.setup = function () {
     GPoint.prototype.parentId = -1;
@@ -238,14 +239,15 @@ function DefaultGraph() {
 
 
     resumeButton = new Button("RESUME", 100, 10, 80, 20, color(0, 0, 0), color(40, 40, 40), color(240, 240, 240), () => {
+      me.totalPausedFrames += (frameCount - me.startPauseFrame);
       me.sceneManager.showScene(Sim);
-      frameCount -= (frameCount - me.startPauseFrame)
     });
     customGraphButton = new Button("GRAPH CUSTOM", 300, 10, 100, 20, color(60, 0, 0), color(100, 20, 20), color(240, 240, 240), () => me.sceneManager.showScene(CustomGraphSetupX));
     exportButton = new Button("EXPORT", 200, 10, 80, 20, color(0, 0, 60), color(20, 20, 100), color(240, 240, 240), () => {
       alert("Saving data as csv files. If not saving, allow downloads from this site.");
       save(this.globalsTable, 'globalsTable.csv');
       save(this.bugTable, 'bugTable.csv');
+      this.mouseIsPressed = false;
     });
     //noLoop();
   };
