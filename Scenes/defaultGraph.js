@@ -11,17 +11,20 @@ function DefaultGraph() {
   let checkBoxTest4;
   let checkBoxTest5;
   let checkBoxTest6;
+  let checkBoxTest7;
 
   this.graphSpeed = true;
   this.graphSmell = true;
   this.graphSight = true;
   this.graphDiameter = true;
   this.drawParentLines = true;
+  this.drawKillerLines = false;
 
   this.startPauseFrame;
+  this.totalPausedFrames = 0;
 
   this.setup = function () {
-    
+    GPoint.prototype.parentId = -1;
     checkBoxArray = new Array();
 
     checkBoxTest = new Checkbox("Smell Diameter", 100, 70, 10, me.graphSmell);
@@ -78,6 +81,16 @@ function DefaultGraph() {
     checkBoxTest6.checkedColor = color(150, 150, 150);
     checkBoxArray.push(checkBoxTest6);
 
+    checkBoxTest7 = new Checkbox("Killer Lines (circle on prey)", 600, 70, 10, me.drawKillerLines);
+    checkBoxTest7.textColor = color(220, 100, 100);
+    checkBoxTest7.clickFunction = () => {
+      me.drawKillerLines = checkBoxTest7.bool;
+      me.enter();
+    };
+    checkBoxTest7.checkedColor = color(220, 100, 100);
+    checkBoxArray.push(checkBoxTest7);
+
+
   }
 
   this.enter = function () {
@@ -96,11 +109,45 @@ function DefaultGraph() {
     var rowArray = bugCSV.getRows();
     for (var i = 0; i < rowArray.length; i++) {
       //label is their parent
-      points[i] = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("speed"), rowArray[i].getNum("parentId"));
-      points2[i] = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("smellDiameter"), rowArray[i].getNum("parentId"));
-      points3[i] = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("sightDiameter"), rowArray[i].getNum("parentId"));
-      points4[i] = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("diameter"), rowArray[i].getNum("parentId"));
+      var point = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("speed"), rowArray[i].getNum("id"));
+      point.parentId = rowArray[i].getNum("parentId");
+      try {
+        point.killerId = rowArray[i].getNum("causeOfDeath");
+      } catch (e) {
+        console.log('not dead?' + e);
+        point.killerId = -1;
+      }
+      points[i] = point;
 
+      point = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("smellDiameter"), rowArray[i].getNum("id"));
+      point.parentId = rowArray[i].getNum("parentId");
+      try {
+        point.killerId = rowArray[i].getNum("causeOfDeath");
+      } catch (e) {
+        console.log('not dead?' + e);
+        point.killerId = -1;
+      }
+      points2[i] = point;
+
+      point = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("sightDiameter"), rowArray[i].getNum("id"));
+      point.parentId = rowArray[i].getNum("parentId");
+      try {
+        point.killerId = rowArray[i].getNum("causeOfDeath");
+      } catch (e) {
+        console.log('not dead?' + e);
+        point.killerId = -1;
+      }
+      points3[i] = point;
+
+      point = new GPoint(rowArray[i].getNum("birthFrame"), rowArray[i].getNum("diameter"), rowArray[i].getNum("id"));
+      point.parentId = rowArray[i].getNum("parentId");
+      try {
+        point.killerId = rowArray[i].getNum("causeOfDeath");
+      } catch (e) {
+        console.log('not dead?' + e);
+        point.killerId = -1;
+      }
+      points4[i] = point;
 
     }
 
@@ -149,6 +196,8 @@ function DefaultGraph() {
       //plot.drawFilledContours(GPlot.HORIZONTAL, 0);
       if (this.drawParentLines)
         plot.getMainLayer().drawParentLines();
+      if (this.drawKillerLines)
+        plot.getMainLayer().drawKillerLines();
       plot.drawPoints();
     }
     plot.endDraw();
@@ -163,16 +212,22 @@ function DefaultGraph() {
     if (this.graphSmell) {
       if (this.drawParentLines)
         plot2.getMainLayer().drawParentLines();
+      if (this.drawKillerLines)
+        plot2.getMainLayer().drawKillerLines();
       plot2.getMainLayer().drawPoints();
     }
     if (this.graphSight) {
       if (this.drawParentLines)
         plot2.getLayer("Sight Diameter").drawParentLines();
+      if (this.drawKillerLines)
+        plot2.getLayer("Sight Diameter").drawKillerLines();
       plot2.getLayer("Sight Diameter").drawPoints();
     }
     if (this.graphDiameter) {
       if (this.drawParentLines)
         plot2.getLayer("Diameter").drawParentLines();
+      if (this.drawKillerLines)
+        plot2.getLayer("Diameter").drawKillerLines();
       plot2.getLayer("Diameter").drawPoints();
     }
 
@@ -183,12 +238,16 @@ function DefaultGraph() {
     }
 
 
-    resumeButton = new Button("RESUME", 100, 10, 80, 20, color(0, 0, 0), color(40, 40, 40), color(240, 240, 240), () => {me.sceneManager.showScene(Sim); frameCount -= (frameCount - me.startPauseFrame)});
+    resumeButton = new Button("RESUME", 100, 10, 80, 20, color(0, 0, 0), color(40, 40, 40), color(240, 240, 240), () => {
+      me.totalPausedFrames += (frameCount - me.startPauseFrame);
+      me.sceneManager.showScene(Sim);
+    });
     customGraphButton = new Button("GRAPH CUSTOM", 300, 10, 100, 20, color(60, 0, 0), color(100, 20, 20), color(240, 240, 240), () => me.sceneManager.showScene(CustomGraphSetupX));
     exportButton = new Button("EXPORT", 200, 10, 80, 20, color(0, 0, 60), color(20, 20, 100), color(240, 240, 240), () => {
       alert("Saving data as csv files. If not saving, allow downloads from this site.");
       save(this.globalsTable, 'globalsTable.csv');
       save(this.bugTable, 'bugTable.csv');
+      this.mouseIsPressed = false;
     });
     //noLoop();
   };
